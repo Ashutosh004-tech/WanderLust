@@ -18,6 +18,7 @@ const listingsRoute = require("./routes/listing.js");
 const reviewsRoute = require("./routes/reviews.js");
 const userRoute = require("./routes/user.js");
 const app = express();
+const Listing = require("./models/listing");
 
 const dbUrl = process.env.ATLASDB_URL;
 
@@ -84,6 +85,12 @@ app.use((req, res, next) => {
 app.use("/listings", listingsRoute);
 app.use("/listings/:id/reviews", reviewsRoute);
 app.use("/", userRoute);
+
+//For index route
+app.get("/", async(req,res)=>{
+ let allListing = await Listing.find({});
+  res.render("./listing/index.ejs", { allListing });
+})
 
 // Catch-all route for undefined routes
 app.all("*", (req, res, next) => {
